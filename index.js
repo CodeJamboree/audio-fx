@@ -162,7 +162,7 @@ function handleCustomWaveFormClick(event) {
   const x = clientX - left;
   const y = clientY - top;
   const sliceX = customWaveformCanvas.width / (customWaveFormData.length - 1);
-  const xIndex = Math.floor(x / sliceX);
+  const xIndex = Math.floor((x + (sliceX / 2)) / sliceX);
   customWaveFormData[xIndex] = y / height;
   const ctx = customWaveformCanvas.getContext('2d');
   ctx.clearRect(0, 0, width, height);
@@ -192,7 +192,7 @@ function handleLoad() {
   btn = document.getElementById('btn');
   btn.addEventListener('click', handleClick);
   customWaveformCanvas = document.getElementById('customWaveform');
-  customWaveFormData = Array(10).fill(.5);
+  customWaveFormData = Array(20).fill(.5);
   oscilloscopeCanvas = document.getElementById('oscilloscope');
   waveFormRadios = document.getElementsByName('waveType');
   for(let i = 0; i < waveFormRadios.length; i++) {
