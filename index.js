@@ -59,6 +59,7 @@ function fillWave(waveType, data, bufferSize, sampleRate, frequency) {
 }
 
 function handleClick() {
+  const durationSeconds = parseFloat(document.getElementById('durationSeconds').value);
   const frequency = parseInt(document.getElementById('frequency').value);
   const radios = document.getElementsByName('waveType');
   let waveType;
@@ -69,23 +70,30 @@ function handleClick() {
     }
   }
 
-  const lengthSeconds = 2;
   const channelCount = 1;
-
   const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-  const bufferSize = lengthSeconds * audioContext.sampleRate;
-  const buffer = audioContext.createBuffer(channelCount, bufferSize, audioContext.sampleRate);
-  const data = buffer.getChannelData(0);
-  fillWave(waveType, data, bufferSize, audioContext.sampleRate, frequency);
 
-  const bufferSource = audioContext.createBufferSource();
-  bufferSource.buffer = buffer;
-  bufferSource.connect(audioContext.destination);
-  bufferSource.start();
-
+  let sound;
+  if(waveType === 'noise') {
+    const sampleRate = audioContext.sampleRate;
+    const numSamples = Math.ceil(sampleRate * durationSeconds);
+    const buffer = audioContext.createBuffer(channelCount, numSamples, sampleRate);
+    const data = buffer.getChannelData(0);
+    for(let i = 0; i < numSamples; i++) {
+      data[i] = randomNum(-1, 1);
+    }
+    sound = audioContext.createBufferSource();
+    sound.buffer = buffer;
+  } else {
+    sound = audioContext.createOscillator();
+    sound.type = waveType;
+    sound.frequency.setValueAtTime(frequency, audioContext.currentTime);
+  }
+  sound.connect(audioContext.destination);
+  sound.start();
   window.setTimeout(() => {
-    bufferSource.stop();
-  }, 400);
+    sound.stop();
+  }, durationSeconds * 1000);
 }
 
 function handleLoad() {
