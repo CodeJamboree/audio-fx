@@ -56,6 +56,10 @@ function setFrequency(hertz) {
 function getWaveForm() {
   return document.querySelector('input[name="waveType"]:checked').value;
 }
+function getTremolo() {
+  return document.getElementById('tremolo').checked;
+}
+
 let audioContext = new (window.AudioContext || window.webkitAudioContext)();
 
 function handleClick() {
@@ -74,7 +78,16 @@ function handleClick() {
   const channelCount = 1;
   let sound = getSound(waveType, audioContext, channelCount, frequency, durationSeconds);
 
-  sound.connect(audioContext.destination);
+  if(getTremolo()) {
+    const gainNode = audioContext.createGain();
+    gainNode.gain.setValueAtTime(0.5, audioContext.currentTime);
+    const tremolo = audioContext.createGain();
+    sound.connect(tremolo);
+    tremolo.connect(gainNode);
+    gainNode.connect(audioContext.destination);
+  } else {
+    sound.connect(audioContext.destination);
+  }
   sound.start();
   window.setTimeout(() => {
     sound.stop();
