@@ -277,7 +277,7 @@ function handlePianoMouseMove(event) {
     if(found) break;
   }
 
-  piano.frequency = 440 * Math.pow(2, (piano.keyNumber - 50) / 12);
+  piano.frequency = 440 * Math.pow(2, (piano.keyNumber - 49) / 12);
   setFrequency(piano.frequency);
   drawPiano();
   if(pianoPressed && piano.keyNumber !== piano.lastKey) {
