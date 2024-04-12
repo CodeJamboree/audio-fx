@@ -2,7 +2,12 @@
 <html>
 <head>
 	<title>Home</title>
-  <script src="index.js"></script>
+  <style>
+    #customWaveform {
+      border: 1px solid black;
+    }
+    </style>
+  <script src="index.js" defer></script>
 </head>
 <body>
 	<h1>Home</h1>
@@ -14,21 +19,35 @@
     Frequency: <input type="number" id="frequency" value="440" />
   </label>
   <br />
-  <label>
-    <input type="radio" name="waveType" value="sign" checked /> Sign
-  </label>
-  <label>
-    <input type="radio" name="waveType" value="noise" /> Noise
-  </label>
-  <label>
-    <input type="radio" name="waveType" value="square" /> Square
-  </label>
-  <label>
-    <input type="radio" name="waveType" value="sawtooth" /> Sawtooth
-  </label>
-  <label>
-    <input type="radio" name="waveType" value="triangle" /> Triangle
-  </label>
+  Wave Form:
+  <table>
+    <tr>
+      <td>
+        <label>
+          <input type="radio" name="waveType" value="sine" checked /> Sine
+        </label><br />
+        <label>
+          <input type="radio" name="waveType" value="square" /> Square
+        </label><br />
+        <label>
+          <input type="radio" name="waveType" value="sawtooth" /> Sawtooth
+        </label><br />
+        <label>
+          <input type="radio" name="waveType" value="triangle" /> Triangle
+        </label>
+      </td>
+      <td>
+        <label>
+          <input type="radio" name="waveType" value="noise" /> Noise
+        </label><br />
+        <label>
+          <input type="radio" name="waveType" value="custom" /> Custom
+        </label><br />
+        <canvas id="customWaveform" width="200" height="50"></canvas>
+      
+      </td>
+    </tr>
+  </table>
   <br />
   <button id="btn">Click me</button>
 </body>
