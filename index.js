@@ -161,6 +161,10 @@ function handleCustomWaveFormMouseDown() {
 function handleCustomWaveFormMouseUp() {
   customWaveformDrawing = false;
 }
+
+function keyToOctave(key) {
+  return Math.floor((key + 8) / 12);
+}
 function handleCustomWaveFormClick(event) {
   const {
     left,
@@ -260,6 +264,7 @@ function handlePianoMouseMove(event) {
       piano.keyNumber = keyNumber;
       piano.sharpFlat = false;
       piano.letter = pianoLetters[i % 7];
+      piano.octave = keyToOctave(keyNumber);
       found = true;
     }
 
@@ -270,6 +275,7 @@ function handlePianoMouseMove(event) {
         piano.keyNumber = keyNumber;
         piano.sharpFlat = true;
         piano.letter = pianoLetters[i % 7] + musicSharp + ' ' + pianoLetters[(i+1) % 7] + musicFlat;
+        piano.octave = keyToOctave(keyNumber);
         found = true;
       }
     }
@@ -332,7 +338,7 @@ function drawPiano() {
   }
   ctx.fillStyle = 'red';
   ctx.font = '20px Arial';
-  ctx.fillText(`Key Number: ${piano.keyNumber} : ${piano.letter}`, 0, 20);
+  ctx.fillText(`Key Number: ${piano.keyNumber} : ${piano.letter} : Octave ${piano.octave}`, 0, 20);
 }
 
 function handleCustomWaveFormMouseMove(event) {
