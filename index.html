@@ -3,8 +3,9 @@
 <head>
 	<title>Home</title>
   <style>
-    #customWaveform {
+    #customWaveform, #oscilloscope {
       border: 1px solid black;
+      background-color: #cccccc;
     }
     </style>
   <script src="index.js" defer></script>
@@ -19,7 +20,9 @@
     Frequency: <input type="number" id="frequency" value="440" />
   </label>
   <br />
-  Wave Form:
+  Wave Form:<br />
+  <canvas id="oscilloscope" width="200" height="50"></canvas>
+
   <table>
     <tr>
       <td>
