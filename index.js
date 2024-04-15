@@ -315,6 +315,7 @@ function drawPiano() {
 
   const ctx = pianoCanvas.getContext('2d');
   ctx.fillStyle = 'white';
+  ctx.lineWidth = 1;
   
   let keyNumber = 0;
   for (let i = 0; i < whiteKeyCount; i++) {
@@ -349,9 +350,16 @@ function drawPiano() {
           ctx.strokeRect(x, 0, blackKeyWidth, blackKeyHeight);
       }
   }
-  ctx.fillStyle = 'red';
+  const text = `Key Number: ${piano.keyNumber} : ${piano.letter} : Octave ${piano.octave}`;
   ctx.font = '20px Arial';
-  ctx.fillText(`Key Number: ${piano.keyNumber} : ${piano.letter} : Octave ${piano.octave}`, 0, 20);
+  ctx.strokeStyle = 'white';
+  ctx.lineWidth = 4;
+  ctx.strokeText(text, 0, 20);
+  ctx.strokeStyle = 'black';
+  ctx.lineWidth = 3;
+  ctx.strokeText(text, 0, 20);
+  ctx.fillStyle = 'red';
+  ctx.fillText(text, 0, 20);
 }
 
 function handleCustomWaveFormMouseMove(event) {
