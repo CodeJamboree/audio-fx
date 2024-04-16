@@ -6,8 +6,19 @@ let oscilloscopeCanvas;
 let customWaveFormData = [];
 let pianoCanvas;
 
+let sfxBarCount = 36;
+let sfxBarDurationSeconds = 0.007;
+
 function randomNum(min, max) {
   return Math.random() * (max - min) + min;
+}
+
+function fillSineWave(data, frequency, sampleRate, startIndex, endIndex) {
+  const numSamples = endIndex - startIndex;
+  for(let i = 0; i < numSamples; i++) {
+    const t = i / sampleRate;
+    data[startIndex + i] = Math.sin(2 * Math.PI * frequency * t);
+  }
 }
 
 function getSound(waveType, audioContext, channelCount, frequency, durationSeconds) {
@@ -22,6 +33,22 @@ function getSound(waveType, audioContext, channelCount, frequency, durationSecon
     const bufferSource = audioContext.createBufferSource();
     bufferSource.buffer = buffer;
     return bufferSource;
+  }
+  if(waveType === 'sfx') {
+   const sampleRate = audioContext.sampleRate;
+   const numSamples = Math.ceil(sampleRate * sfxBarDurationSeconds * sfxBarCount);
+   const buffer = audioContext.createBuffer(channelCount, numSamples, sampleRate);
+   const data = buffer.getChannelData(0);
+   for(let barIndex = 0; barIndex < sfxBarCount; barIndex++) {
+      const barValue = customWaveFormData[barIndex];
+      const frequency = barValue * 4070;
+      const startIndex = barIndex * sfxBarDurationSeconds * sampleRate;
+      const endIndex = (barIndex + 1) * sfxBarDurationSeconds * sampleRate;
+      fillSineWave(data, frequency, sampleRate, startIndex, endIndex);
+   }
+   const bufferSource = audioContext.createBufferSource();
+   bufferSource.buffer = buffer;
+   return bufferSource;
   }
 
   const oscillator = audioContext.createOscillator();
@@ -43,7 +70,11 @@ function getSound(waveType, audioContext, channelCount, frequency, durationSecon
 }
 
 function getDurationSeconds() { 
-  return parseFloat(document.getElementById('durationSeconds').value);
+  const waveType = getWaveForm();
+  if(waveType !== 'sfx') {
+    return parseFloat(document.getElementById('durationSeconds').value);
+  }
+  return sfxBarCount * sfxBarDurationSeconds;
 }
 
 function getFrequency() {
@@ -210,7 +241,7 @@ function handleCustomWaveFormClick(event) {
   }
   ctx.stroke();
 
-  if(getWaveForm() === 'custom')
+  if(getWaveForm() === 'custom' ||  getWaveForm() === 'sfx')
     handleWaveFormChange();
 }
 
@@ -372,7 +403,7 @@ function handleLoad() {
   pianoCanvas = document.getElementById('piano');
   drawPiano();
   customWaveformCanvas = document.getElementById('customWaveform');
-  customWaveFormData = Array(20).fill(.5);
+  customWaveFormData = Array(sfxBarCount).fill(.5);
   oscilloscopeCanvas = document.getElementById('oscilloscope');
   waveFormRadios = document.getElementsByName('waveType');
   for(let i = 0; i < waveFormRadios.length; i++) {
